@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes">
+    <title>Unity WebGL Player | My project (12)</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    
+    <style>
+      /* ��ü ȭ�� �߾ӿ� ����� ���� ������ ���ڸ� ����ϴ� */
+      html, body {
+        background-color: #f5f5f5; /* �������� ��Ÿ�� ����� ���� */
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #unity-container {
+        width: 360px !important;  /* �Ϲ����� ����Ʈ�� ���� ũ�� ���� */
+        height: 740px !important; /* �Ϲ����� ����Ʈ�� ���� ũ�� ���� */
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1); /* ���õ� �׸��� ȿ�� */
+        background: #fff;
+        overflow: hidden;
+      }
+      #unity-canvas {
+        width: 100% !important;
+        height: 100% !important;
+      }
+      /* ���â�� �� �̻� �ʿ� �����Ƿ� ���� */
+      #unity-mobile-warning {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="unity-container">
+      <canvas id="unity-canvas"></canvas>
+      
+      <div id="unity-loading-bar" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center;">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty" style="width:200px; height:10px; background:#eee; border-radius:5px; margin-top:10px;">
+          <div id="unity-progress-bar-full" style="width:0%; height:100%; background:#ff5a5a; border-radius:5px; transition: width 0.2s;"></div>
+        </div>
+      </div>
+
+      <div id="unity-footer" style="display:none;">
+        <div id="unity-fullscreen-button"></div>
+      </div>
+    </div>
+
+    <script>
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/RoomTherapy_Series3_Build.loader.js";
+      var config = {
+        dataUrl: buildUrl + "/RoomTherapy_Series3_Build.data",
+        frameworkUrl: buildUrl + "/RoomTherapy_Series3_Build.framework.js",
+        codeUrl: buildUrl + "/RoomTherapy_Series3_Build.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "My project (12)",
+        productVersion: "1.0",
+      };
+
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+
+      // ��� ������� �ε巯�� �ػ󵵸� ���� �ȼ� ��Ī ����
+      config.devicePixelRatio = window.devicePixelRatio || 1;
+
+      // [�ٽ� ��ģ �κ�] ����� ��� üũ �� ���� �����ϴ� ������ ������ �����߽��ϴ�.
+      // ���� PC ����� ��� ����Ʈ���̵� ������ �ε� �ٸ� ���� �����մϴ�.
+
+      loadingBar.style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          if(progressBarFull) progressBarFull.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          if(loadingBar) loadingBar.style.display = "none";
+          fullscreenButton.onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
